@@ -23,8 +23,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2113,9 +2113,9 @@ def start_buytrade(buy_amt):
                 # rsi[2]['RSI'] : 2일전
                 # rsi[3]['RSI'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))):
-                        # and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
-                        # and Decimal(str(rsi[2]['RSI'])) < Decimal(str(40))):
+                if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                        and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                        and Decimal(str(rsi[3]['RSI'])) < Decimal(str(60))):
                     rsi_val = True
  
                 # --------------------------------------------------------------
@@ -2125,10 +2125,10 @@ def start_buytrade(buy_amt):
                 # mfi[2]['MFI'] : 2일전
                 # mfi[3]['MFI'] : 3일전
                 # --------------------------------------------------------------
-                # if (Decimal(str(mfi[0]['MFI'])) > Decimal(str(mfi[1]['MFI'])) > Decimal(str(mfi[2]['MFI']))):
+                if (Decimal(str(mfi[0]['MFI'])) > Decimal(str(mfi[1]['MFI'])) > Decimal(str(mfi[2]['MFI']))):
                         # and Decimal(str(mfi[3]['MFI'])) > Decimal(str(mfi[2]['MFI']))
                         # and Decimal(str(mfi[2]['MFI'])) < Decimal(str(80))):
-                    # mfi_val = True
+                    mfi_val = True
 
                 # --------------------------------------------------------------
                 # MACD(OCL) : 3일전 < 0, 2일전 < 0, 1일전 < 0, 3일전 > 2일전, 1일전 > 2일전, 현재 > 1일전
@@ -2137,11 +2137,11 @@ def start_buytrade(buy_amt):
                 # macd[2]['OCL'] : 2일전
                 # macd[3]['OCL'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(macd[0]['OCL'])) > Decimal(str(macd[1]['OCL'])) > Decimal(str(macd[2]['OCL']))):
+                if (Decimal(str(macd[0]['OCL'])) > Decimal(str(macd[1]['OCL'])) > Decimal(str(macd[2]['OCL']))
                         # and Decimal(str(macd[3]['OCL'])) < Decimal(str(macd[2]['OCL']))):
                         # and Decimal(str(macd[1]['OCL'])) < Decimal(str(0))
                         # and Decimal(str(macd[2]['OCL'])) < Decimal(str(0))):
-                        # and Decimal(str(macd[3]['OCL'])) < Decimal(str(0))):
+                        and Decimal(str(macd[3]['OCL'])) < Decimal(str(0))):
                     ocl_val = True
                   
 
@@ -2327,7 +2327,7 @@ if __name__ == '__main__':
         # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
         # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
         log_level = str('D')
-        buy_amt = 6000
+        buy_amt = 10000
  
         set_loglevel(log_level)
  
