@@ -26,8 +26,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5Nrx'
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzMk3Z'
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2218,12 +2218,12 @@ if __name__ == '__main__':
         # ---------------------------------------------------------------------
  
         # 1. 로그레벨
-        # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
-        # sell_pcnt = input("매도 수익률(ex:2%=2) : ")
-        # dcnt_pcnt = input("고점대비 하락률(ex:-1%=-1) : ")
-        log_level = str('D').upper()
-        sell_pcnt = 5
-        dcnt_pcnt = -1
+        log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
+        sell_pcnt = input("매도 수익률(ex:2%=2) : ")
+        dcnt_pcnt = input("고점대비 하락률(ex:-1%=-1) : ")
+        # log_level = str('D').upper()
+        # sell_pcnt = 5
+        # dcnt_pcnt = -1
 
  
         set_loglevel(log_level)
