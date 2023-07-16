@@ -2158,7 +2158,7 @@ def start_buytrade(buy_amt):
                     # logging.info('MACD : ' + str(macd))
 
                     # 가격 조회 (30분)
-                    price = get_candle(target_item['market'], '10', '4')
+                    price = get_candle(target_item['market'], '30', '4')
                                         # for target_price in price:
                     price[3]['low_price'] # 90분 전 저가
                     price[2]['low_price'] # 60분 전 저가
@@ -2174,7 +2174,7 @@ def start_buytrade(buy_amt):
                     # price_avg[3] = (price[3]['low_price'] + price[3]['high_price'])/2
 
                     # 볼린저밴드 조회 (30분)
-                    bb_data = get_bb(target_item['market'], '10', '200', '4')
+                    bb_data = get_bb(target_item['market'], '30', '200', '4')
                     # for bb in bb_data:
                     # logging.info(bb_data)
                     bb_data[3]['BBL'] # 90분 전 BBL
@@ -2324,7 +2324,7 @@ if __name__ == '__main__':
         # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
         # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
         log_level = str('D')
-        buy_amt = 5000
+        buy_amt = 9000
  
         set_loglevel(log_level)
  
