@@ -23,8 +23,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5='
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM='
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2328,10 +2328,10 @@ if __name__ == '__main__':
         # ---------------------------------------------------------------------
  
         # 1. 로그레벨
-        log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
-        buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
-        # log_level = str('D')
-        # buy_amt = 20000
+        # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
+        # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
+        log_level = str('D')
+        buy_amt = 10000
  
         set_loglevel(log_level)
  
