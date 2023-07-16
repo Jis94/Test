@@ -2080,7 +2080,7 @@ def start_buytrade(buy_amt):
                 # 1. 조회 기준 : 일캔들, 최근 5개 지표 조회
                 # 2. 속도를 위해 원하는 지표만 조회(RSI, MFI, MACD, CANDLE)
                 # -------------------------------------------------------------
-                indicators = get_indicator_sel(target_item['market'], 'D', 200, 5, ['RSI', 'MFI', 'MACD', 'CANDLE', 'BB'])
+                indicators = get_indicator_sel(target_item['market'], '30', 200, 5, ['RSI', 'MFI', 'MACD', 'CANDLE'])
  
                 # --------------------------------------------------------------
                 # 최근 상장하여 캔들 갯수 부족으로 보조 지표를 구하기 어려운 건은 제외
@@ -2113,9 +2113,10 @@ def start_buytrade(buy_amt):
                 # rsi[2]['RSI'] : 2일전
                 # rsi[3]['RSI'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))
-                        and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
-                        and Decimal(str(rsi[3]['RSI'])) < Decimal(str(60))):
+                if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[1]['RSI'])) 
+                and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI'])) > Decimal(str(rsi[1]['RSI']))
+                        # and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                        and Decimal(str(rsi[2]['RSI'])) < Decimal(str(30))):
                     rsi_val = True
  
                 # --------------------------------------------------------------
@@ -2125,9 +2126,10 @@ def start_buytrade(buy_amt):
                 # mfi[2]['MFI'] : 2일전
                 # mfi[3]['MFI'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(mfi[0]['MFI'])) > Decimal(str(mfi[1]['MFI'])) > Decimal(str(mfi[2]['MFI']))):
-                        # and Decimal(str(mfi[3]['MFI'])) > Decimal(str(mfi[2]['MFI']))
-                        # and Decimal(str(mfi[2]['MFI'])) < Decimal(str(80))):
+                if (Decimal(str(mfi[0]['MFI'])) > Decimal(str(mfi[1]['MFI'])) 
+                and Decimal(str(mfi[3]['MFI'])) > Decimal(str(mfi[2]['MFI'])) > Decimal(str(mfi[1]['MFI']))
+                        # and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
+                        and Decimal(str(mfi[2]['MFI'])) < Decimal(str(30))):
                     mfi_val = True
 
                 # --------------------------------------------------------------
@@ -2136,13 +2138,13 @@ def start_buytrade(buy_amt):
                 # macd[1]['OCL'] : 1일전
                 # macd[2]['OCL'] : 2일전
                 # macd[3]['OCL'] : 3일전
-                # --------------------------------------------------------------
-                if (Decimal(str(macd[0]['OCL'])) > Decimal(str(macd[1]['OCL'])) > Decimal(str(macd[2]['OCL']))
-                        # and Decimal(str(macd[3]['OCL'])) < Decimal(str(macd[2]['OCL']))):
-                        # and Decimal(str(macd[1]['OCL'])) < Decimal(str(0))
-                        # and Decimal(str(macd[2]['OCL'])) < Decimal(str(0))):
-                        and Decimal(str(macd[3]['OCL'])) < Decimal(str(0))):
-                    ocl_val = True
+                # # --------------------------------------------------------------
+                # if (Decimal(str(macd[0]['OCL'])) > Decimal(str(macd[1]['OCL'])) > Decimal(str(macd[2]['OCL']))
+                #         # and Decimal(str(macd[3]['OCL'])) < Decimal(str(macd[2]['OCL']))):
+                #         # and Decimal(str(macd[1]['OCL'])) < Decimal(str(0))
+                #         # and Decimal(str(macd[2]['OCL'])) < Decimal(str(0))):
+                #         and Decimal(str(macd[3]['OCL'])) < Decimal(str(0))):
+                #     ocl_val = True
                   
 
                 # --------------------------------------------------------------
@@ -2150,15 +2152,14 @@ def start_buytrade(buy_amt):
                 # --------------------------------------------------------------
                 # logging.info(Decimal(str([0]['OCL'])))
 
-                if rsi_val: 
-                # and mfi_val and ocl_val:
+                if rsi_val and mfi_val:
                     logging.info('매수대상 발견....[' + str(target_item['market']) + ']')
                     logging.info('RSI : ' + str(rsi))
-                    # logging.info('MFI : ' + str(mfi))
-                    # logging.info('MACD : ' + str(macd))
+                    logging.info('MFI : ' + str(mfi))
+                    logging.info('MACD : ' + str(macd))
 
                     # 가격 조회 (30분)
-                    price = get_candle(target_item['market'], '10', '4')
+                    price = get_candle(target_item['market'], '30', '4')
                                         # for target_price in price:
                     price[3]['low_price'] # 90분 전 저가
                     price[2]['low_price'] # 60분 전 저가
@@ -2170,11 +2171,12 @@ def start_buytrade(buy_amt):
                     price[2]['high_price'] # 60분 전 고가
                     price[1]['high_price'] # 30분 전 고가
                     price[0]['high_price'] # 현재 고가   
+                    
 
                     # price_avg[3] = (price[3]['low_price'] + price[3]['high_price'])/2
 
                     # 볼린저밴드 조회 (30분)
-                    bb_data = get_bb(target_item['market'], '10', '200', '4')
+                    bb_data = get_bb(target_item['market'], '30', '200', '4')
                     # for bb in bb_data:
                     # logging.info(bb_data)
                     bb_data[3]['BBL'] # 90분 전 BBL
@@ -2253,12 +2255,14 @@ def start_buytrade(buy_amt):
                         logging.info('주문금액[' + str(buy_amt) + ']이 최소 주문금액[' + str(min_order_amt) + '] 보다 작습니다.')
                         continue
 
-                    logging.info('시장가 매수 시작! [' + str(target_item['market']) + ']')
-                    rtn_buycoin_mp = buycoin_mp(target_item['market'], buy_amt)
-                    logging.info('시장가 매수 종료! [' + str(target_item['market']) + ']')
-                    logging.info(rtn_buycoin_mp)
-                    logging.info('======================================================')
-
+                    # if ((Decimal(str(price[1]['high_price']))) < (Decimal(str(bb_data[1]['BBH'])))
+                    # and (Decimal(str(bb_data_d[1]['BBM']))) < (Decimal(str(price_d[1]['high_price']))) < (Decimal(str(bb_data_d[1]['BBH'])))):
+                        logging.info('시장가 매수 시작! [' + str(target_item['market']) + ']')
+                        # rtn_buycoin_mp = buycoin_mp(target_item['market'], buy_amt)
+                        logging.info('시장가 매수 종료! [' + str(target_item['market']) + ']')
+                        logging.info(rtn_buycoin_mp)
+                        logging.info('======================================================')
+                    
                     # if ((Decimal(str(price[3]['low_price'] ))) < (Decimal(str(bb_data[3]['BBL'])))
                     # and (Decimal(str(price[2]['low_price']))) < (Decimal(str(bb_data[2]['BBL'])))
                     # and ((((Decimal(str((price[1]['low_price']))))) + (Decimal(str(price[1]['high_price']))))/2) > (Decimal(str(bb_data[1]['BBL'])))
@@ -2324,10 +2328,10 @@ if __name__ == '__main__':
         # ---------------------------------------------------------------------
  
         # 1. 로그레벨
-        # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
-        # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
-        log_level = str('D')
-        buy_amt = 10000
+        log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
+        buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
+        # log_level = str('D')
+        # buy_amt = 20000
  
         set_loglevel(log_level)
  
