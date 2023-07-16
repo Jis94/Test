@@ -26,8 +26,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5='
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM='
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2054,7 +2054,9 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
             # 보유 종목조회
             # ------------------------------------------------------------------
             target_items = get_accounts('Y', 'KRW')
- 
+            # logging.info('===================================================')
+            # logging.info('target_items :' + str(target_items))
+            # logging.info('===================================================')
             # ------------------------------------------------------------------
             # 보유 종목 현재가 조회
             # ------------------------------------------------------------------
@@ -2067,7 +2069,11 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
             for target_item in target_items:
                 for ticker in tickers:
                     if target_item['market'] == ticker['market']:
+                        # logging.info('---------------------------------------------------')
+                        # logging.info('target_item :' + str(target_item))
+                        # logging.info('---------------------------------------------------')
  
+
                         # -------------------------------------------------
                         # 고점을 계산하기 위해 최근 매수일시 조회
                         # 1. 해당 종목에 대한 거래 조회(done, cancel)
@@ -2078,7 +2084,11 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         order_done = get_order_status(target_item['market'], 'done') + get_order_status(target_item['market'], 'cancel')
                         order_done_sorted = orderby_dict(order_done, 'created_at', True)
                         order_done_filtered = filter_dict(order_done_sorted, 'side', 'bid')
- 
+
+                        indicators = get_indicator_sel(target_item['market'], '30', 200, 5, ['RSI', 'MFI', 'MACD', 'CANDLE'])
+                        rsi = indicators['RSI']
+                        mfi = indicators['MFI']
+                        macd = indicators['MACD']
                         # -------------------------------------------------
                         # 매수 직후 나타나는 오류 체크용 마지막 매수 시간 차이 계산
                         # -------------------------------------------------
@@ -2142,6 +2152,7 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         logging.info(Decimal(str(bb_data[2]['BBH']))) # 2일 전 BBH
                         logging.info(Decimal(str(bb_data[1]['BBH']))) # 1일 전 BBH
                         logging.info(Decimal(str(bb_data[0]['BBH']))) # 현재 BBH
+                        logging.info((Decimal(str(bb_data[0]['BBH'])))*2)
 
                         # ------------------------------------------------------------------
                         # 최근 매수일자 다음날부터 현재까지의 최고가를 계산
@@ -2170,12 +2181,13 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         logging.info(Decimal(str(price[0]['high_price']))) # 오늘 고가
 
                         if (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt))
-                        or Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.2):
+                        or Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.2
+                        or (Decimal(str(rsi[1]['RSI'])) > 70 and Decimal(str(rsi[0]['RSI'])) < 70)):
                             # if (Decimal(str(ticker['trade_price'])) > ((Decimal(str(bb_data[1]['BBH'])))) 
                             # and Decimal(str(price[0]['high_price'])) > (Decimal(str(bb_data[0]['BBH'])))):
 
                             logging.info('------------------------------------------------------')
-                            logging.info('익-절')
+                            logging.info('익-절')   
                             logging.info('시장가 매도 시작! [' + str(target_item['market']) + ']')
                             rtn_sellcoin_mp = sellcoin_mp(target_item['market'], 'Y')
                             logging.info('시장가 매도 종료! [' + str(target_item['market']) + ']')
@@ -2218,12 +2230,12 @@ if __name__ == '__main__':
         # ---------------------------------------------------------------------
  
         # 1. 로그레벨
-        log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
-        sell_pcnt = input("매도 수익률(ex:2%=2) : ")
-        dcnt_pcnt = input("고점대비 하락률(ex:-1%=-1) : ")
-        # log_level = str('D').upper()
-        # sell_pcnt = 5
-        # dcnt_pcnt = -1
+        # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
+        # sell_pcnt = input("매도 수익률(ex:2%=2) : ")
+        # dcnt_pcnt = input("고점대비 하락률(ex:-1%=-1) : ")
+        log_level = str('D').upper()
+        sell_pcnt = 5
+        dcnt_pcnt = -2
 
  
         set_loglevel(log_level)
