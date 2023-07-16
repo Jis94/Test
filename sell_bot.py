@@ -2237,7 +2237,7 @@ if __name__ == '__main__':
         sell_pcnt = 5
         dcnt_pcnt = -2
 
- 
+  
         set_loglevel(log_level)
  
         logging.info("*********************************************************")
