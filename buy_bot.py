@@ -23,8 +23,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5='
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM='
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2080,7 +2080,7 @@ def start_buytrade(buy_amt):
                 # 1. 조회 기준 : 일캔들, 최근 5개 지표 조회
                 # 2. 속도를 위해 원하는 지표만 조회(RSI, MFI, MACD, CANDLE)
                 # -------------------------------------------------------------
-                indicators = get_indicator_sel(target_item['market'], 'D', 200, 5, ['RSI', 'MFI', 'MACD', 'CANDLE', 'BB'])
+                indicators = get_indicator_sel(target_item['market'], '30', 200, 5, ['RSI', 'MFI', 'MACD', 'CANDLE', 'BB'])
  
                 # --------------------------------------------------------------
                 # 최근 상장하여 캔들 갯수 부족으로 보조 지표를 구하기 어려운 건은 제외
@@ -2113,7 +2113,7 @@ def start_buytrade(buy_amt):
                 # rsi[2]['RSI'] : 2일전
                 # rsi[3]['RSI'] : 3일전
                 # --------------------------------------------------------------
-                if (Decimal(str(rsi[1]['RSI'])) > Decimal(str(rsi[2]['RSI']))):
+                if (Decimal(str(rsi[0]['RSI'])) > Decimal(str(rsi[2]['RSI']))):
                         # and Decimal(str(rsi[3]['RSI'])) > Decimal(str(rsi[2]['RSI']))
                         # and Decimal(str(rsi[2]['RSI'])) < Decimal(str(40))):
                     rsi_val = True
@@ -2174,7 +2174,7 @@ def start_buytrade(buy_amt):
                     # price_avg[3] = (price[3]['low_price'] + price[3]['high_price'])/2
 
                     # 볼린저밴드 조회 (30분)
-                    bb_data = get_bb(target_item['market'], '30', '200', '4')
+                    bb_data = get_bb(target_item['market'], '10', '200', '4')
                     # for bb in bb_data:
                     # logging.info(bb_data)
                     bb_data[3]['BBL'] # 90분 전 BBL
@@ -2258,13 +2258,13 @@ def start_buytrade(buy_amt):
                     and (Decimal(str(price[2]['low_price']))) < (Decimal(str(bb_data[2]['BBL'])))
                     and ((((Decimal(str((price[1]['low_price']))))) + (Decimal(str(price[1]['high_price']))))/2) > (Decimal(str(bb_data[1]['BBL'])))
                     and (Decimal(str(price[0]['low_price']))) > (Decimal(str(bb_data[0]['BBL'])))
-                    and (Decimal(str(price[0]['trade_price']))) > (Decimal(str(bb_data[0]['BBL'])))                    
+                    and (Decimal(str(price[0]['trade_price']))) > (Decimal(str(bb_data[0]['BBL'])))
+                    and (Decimal(str(price[1]['high_price']))) < (Decimal(str(bb_data[1]['BBH'])))                    
                     and (((Decimal(str(price[3]['low_price'])))+(Decimal(str(price[3]['high_price']))))/2) < (Decimal(str(bb_data[3]['BBL'])))
                     # and (Decimal(str(price_d[1]['low_price']))) < (Decimal(str(bb_data_d[1]['BBL'])))
                     # and (Decimal(str(price[1]['low_price']))) > (Decimal(str(price[2]['low_price'])))
                     # and (Decimal(str((price[2]['low_price'] + price[2]['high_price'])))) 
                     #     < (Decimal(str((price[1]['low_price'] + price[1]['high_price']))))
-                    and (Decimal(str(price_d[1]['high_price']))) < (Decimal(str(bb_data_d[1]['BBH'])))
                     and (Decimal(str(price[0]['trade_price']))) < (Decimal(str(bb_data_d[0]['BBH'])))):
                         logging.info('======================================================')
                         logging.info('볼린저 밴드 하단 돌파 상승!')
@@ -2324,7 +2324,7 @@ if __name__ == '__main__':
         # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
         # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
         log_level = str('D')
-        buy_amt = 9000
+        buy_amt = 10000
  
         set_loglevel(log_level)
  
