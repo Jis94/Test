@@ -26,8 +26,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5Nrx'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzMk3Z'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5'
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM'
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
