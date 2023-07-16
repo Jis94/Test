@@ -26,8 +26,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2170,7 +2170,7 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         logging.info(Decimal(str(price[0]['high_price']))) # 오늘 고가
 
                         if (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt))
-                        or Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))):
+                        or Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.5):
                             # if (Decimal(str(ticker['trade_price'])) > ((Decimal(str(bb_data[1]['BBH'])))) 
                             # and Decimal(str(price[0]['high_price'])) > (Decimal(str(bb_data[0]['BBH'])))):
 
