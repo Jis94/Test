@@ -2179,7 +2179,7 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         # ------------------------------------------------------------------
                         # 캔들 조회
                         # ------------------------------------------------------------------
-                        candles = get_candle(target_item['market'], '60', 200)
+                        candles = get_candle(target_item['market'], '30', 200)
  
                         # 볼린저밴드 조회
                         bb_data = get_bb(target_item['market'], 'D', '200', '4')
@@ -2259,10 +2259,10 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         # for target_price in price:
                         # logging.info(Decimal(str(price[1]['high_price']))) # 전날 고가
                         # logging.info(Decimal(str(price[0]['high_price']))) # 오늘 고가
-                        if ((stochrsi_K.iloc[-1]*100 < 65 and stochrsi_D.iloc[-1]*100 > 70 and rsi[0]['RSI'] > 50)
-                        or (stochrsi_K.iloc[-1]*100 < 50 and stochrsi_D.iloc[-1]*100 < 50)
+                        if (((Decimal(str(stochrsi_K.iloc[-1]*100)) < 65) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 70) and (Decimal(str(rsi[0]['RSI'])) > 50))
+                        or (Decimal(str(stochrsi_K.iloc[-1]*100)) < 50) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 50)
                         or (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt)))
-                        or Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.2):
+                        or (Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.2)):
                         # or (Decimal(str(rsi[1]['RSI'])) > 70 and Decimal(str(rsi[0]['RSI'])) < 70)):
                             # if (Decimal(str(ticker['trade_price'])) > ((Decimal(str(bb_data[1]['BBH'])))) 
                             # and Decimal(str(price[0]['high_price'])) > (Decimal(str(bb_data[0]['BBH'])))):
@@ -2314,7 +2314,7 @@ if __name__ == '__main__':
         # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
         # sell_pcnt = input("매도 수익률(ex:2%=2) : ")
         # dcnt_pcnt = input("고점대비 하락률(ex:-1%=-1) : ")
-        log_level = str('D')
+        log_level = str('i')
         sell_pcnt = 3
         dcnt_pcnt = -1
 
