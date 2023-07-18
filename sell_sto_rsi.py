@@ -537,7 +537,7 @@ def get_candle(target_item, tick_kind, inq_range):
         res = send_request("GET", server_url + "/v1/candles/" + target_url, querystring, "")
         candle_data = res.json()
  
-        logging.debug(candle_data)
+        # logging.debug(candle_data)
  
         return candle_data
  
@@ -2035,7 +2035,6 @@ def send_msg(sent_list, key, contents, msg_intval):
 # sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 # import upbit
  
- 
 # -----------------------------------------------------------------------------
 # - Name : start_selltrade
 # - Desc : 매도 로직
@@ -2074,6 +2073,44 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         # logging.info('target_item :' + str(target_item))
                         # logging.info('---------------------------------------------------')
  
+                        url_sto = "https://api.upbit.com/v1/candles/minutes/30"
+
+                        querystring = {"market":target_item['market'],"count":200}
+
+                        response = requests.request("GET", url_sto, params=querystring)
+
+                        data = response.json()
+
+                        df = pd.DataFrame(data)
+
+                        series=df['trade_price'].iloc[::-1]
+
+                        df = pd.Series(df['trade_price'].values)
+
+                        period=14
+                        smoothK=3
+                        smoothD=3
+
+                        delta = series.diff().dropna()
+                        ups = delta * 0
+                        downs = ups.copy()
+                        ups[delta > 0] = delta[delta > 0]
+                        downs[delta < 0] = -delta[delta < 0]
+                        ups[ups.index[period-1]] = numpy.mean( ups[:period] )
+                        ups = ups.drop(ups.index[:(period-1)])
+                        downs[downs.index[period-1]] = numpy.mean( downs[:period] )
+                        downs = downs.drop(downs.index[:(period-1)])
+                        rs = ups.ewm(com=period-1,min_periods=0,adjust=False,ignore_na=False).mean() / downs.ewm(com=period-1,min_periods=0,adjust=False,ignore_na=False).mean() 
+                        rsii = 100 - 100 / (1 + rs)
+
+                        stochrsi  = (rsii - rsii.rolling(period).min()) / (rsii.rolling(period).max() - rsii.rolling(period).min())
+                        stochrsi_K = stochrsi.rolling(smoothK).mean()
+                        stochrsi_D = stochrsi_K.rolling(smoothD).mean()
+
+                        # logging.info('STO_K :' + stochrsi_K.iloc[-1]*100)
+                        # logging.info('STO_D :' + stochrsi_D.iloc[-1]*100)
+                        print('stoch_rsi_K: ', stochrsi_K.iloc[-1]*100,' percent')
+                        print('stoch_rsi_D: ', stochrsi_D.iloc[-1]*100,' percent') 
 
                         # -------------------------------------------------
                         # 고점을 계산하기 위해 최근 매수일시 조회
@@ -2174,47 +2211,47 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         logging.info('- 최종 매수시간:' + str(last_buy_dt))
                         logging.info('1')
    
-                        # 가격 조회
-                        price = get_candle(target_item['market'], 'D', '4')
+                        # # 가격 조회
+                        # price = get_candle(target_item['market'], 'D', '4')
 
 
-                        url_sto = "https://api.upbit.com/v1/candles/minutes/30"
+                        # url_sto = "https://api.upbit.com/v1/candles/minutes/30"
             
-                        querystring = {"market":target_item['market'],"count":200}
+                        # querystring = {"market":target_item['market'],"count":200}
                         
-                        response = requests.request("GET", url_sto, params=querystring)
+                        # response = requests.request("GET", url_sto, params=querystring)
                         
-                        data = response.json()
+                        # data = response.json()
                         
-                        df = pd.DataFrame(data)
+                        # df = pd.DataFrame(data)
                         
-                        series=df['trade_price'].iloc[::-1]
+                        # series=df['trade_price'].iloc[::-1]
                         
-                        df = pd.Series(df['trade_price'].values)
+                        # df = pd.Series(df['trade_price'].values)
 
-                        period=14
-                        smoothK=3
-                        smoothD=3
+                        # period=14
+                        # smoothK=3
+                        # smoothD=3
                         
-                        delta = series.diff().dropna()
-                        ups = delta * 0
-                        downs = ups.copy()
-                        ups[delta > 0] = delta[delta > 0]
-                        downs[delta < 0] = -delta[delta < 0]
-                        ups[ups.index[period-1]] = numpy.mean( ups[:period] )
-                        ups = ups.drop(ups.index[:(period-1)])
-                        downs[downs.index[period-1]] = numpy.mean( downs[:period] )
-                        downs = downs.drop(downs.index[:(period-1)])
-                        rs = ups.ewm(com=period-1,min_periods=0,adjust=False,ignore_na=False).mean() / \
-                            downs.ewm(com=period-1,min_periods=0,adjust=False,ignore_na=False).mean() 
-                        rsii = 100 - 100 / (1 + rs)
+                        # delta = series.diff().dropna()
+                        # ups = delta * 0
+                        # downs = ups.copy()
+                        # ups[delta > 0] = delta[delta > 0]
+                        # downs[delta < 0] = -delta[delta < 0]
+                        # ups[ups.index[period-1]] = numpy.mean( ups[:period] )
+                        # ups = ups.drop(ups.index[:(period-1)])
+                        # downs[downs.index[period-1]] = numpy.mean( downs[:period] )
+                        # downs = downs.drop(downs.index[:(period-1)])
+                        # rs = ups.ewm(com=period-1,min_periods=0,adjust=False,ignore_na=False).mean() / \
+                        #     downs.ewm(com=period-1,min_periods=0,adjust=False,ignore_na=False).mean() 
+                        # rsii = 100 - 100 / (1 + rs)
 
-                        stochrsi  = (rsii - rsii.rolling(period).min()) / (rsii.rolling(period).max() - rsii.rolling(period).min())
-                        stochrsi_K = stochrsi.rolling(smoothK).mean()
-                        stochrsi_D = stochrsi_K.rolling(smoothD).mean()
+                        # stochrsi  = (rsii - rsii.rolling(period).min()) / (rsii.rolling(period).max() - rsii.rolling(period).min())
+                        # stochrsi_K = stochrsi.rolling(smoothK).mean()
+                        # stochrsi_D = stochrsi_K.rolling(smoothD).mean()
 
-                        # logging.info('STO_K :' + stochrsi_K.iloc[-1]*100)
-                        # logging.info('STO_D :' + stochrsi_D.iloc[-1]*100)
+                        # # logging.info('STO_K :' + stochrsi_K.iloc[-1]*100)
+                        # # logging.info('STO_D :' + stochrsi_D.iloc[-1]*100)
                         # print('stoch_rsi_K: ', stochrsi_K.iloc[-1]*100,' percent')
                         # print('stoch_rsi_D: ', stochrsi_D.iloc[-1]*100,' percent')
                     
@@ -2223,9 +2260,9 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         # logging.info(Decimal(str(price[1]['high_price']))) # 전날 고가
                         # logging.info(Decimal(str(price[0]['high_price']))) # 오늘 고가
                         if ((stochrsi_K.iloc[-1]*100 < 65 and stochrsi_D.iloc[-1]*100 > 70 and rsi[0]['RSI'] > 50)
-                        or (stochrsi_K.iloc[-1]*100 < 50 and stochrsi_D.iloc[-1]*100 < 50)):
-                        # if (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt))
-                        # or Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.2
+                        or (stochrsi_K.iloc[-1]*100 < 50 and stochrsi_D.iloc[-1]*100 < 50)
+                        or (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt)))
+                        or Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.2):
                         # or (Decimal(str(rsi[1]['RSI'])) > 70 and Decimal(str(rsi[0]['RSI'])) < 70)):
                             # if (Decimal(str(ticker['trade_price'])) > ((Decimal(str(bb_data[1]['BBH'])))) 
                             # and Decimal(str(price[0]['high_price'])) > (Decimal(str(bb_data[0]['BBH'])))):
