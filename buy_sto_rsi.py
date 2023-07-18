@@ -2192,7 +2192,7 @@ def start_buytrade(buy_amt):
                 print('stoch_rsi_K: ', stochrsi_K.iloc[-1]*100,' percent')
                 print('stoch_rsi_D: ', stochrsi_D.iloc[-1]*100,' percent')
 
-                if stochrsi_K.iloc[-1]*100 > 35 and stochrsi_D.iloc[-1]*100 <25 and rsi[0]['RSI'] < 30 and mfi[0]['MFI'] < 20:
+                if stochrsi_K.iloc[-1]*100 > 33 and stochrsi_D.iloc[-1]*100 <27 and rsi[0]['RSI'] < 40 and mfi[0]['MFI'] < 30:
 
                 # if rsi_val:
                     logging.info('매수대상 발견....[' + str(target_item['market']) + ']')
