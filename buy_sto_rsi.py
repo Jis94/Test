@@ -23,8 +23,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5==='
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM==='
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2156,11 +2156,11 @@ def start_buytrade(buy_amt):
     
                 querystring = {"market":target_item['market'],"count":200}
                 
-                response = requests.request("GET", url_sto, params=querystring)
+                responses = requests.request("GET", url_sto, params=querystring)
                 
-                data = response.json()
+                datass = responses.json()
                 
-                df = pd.DataFrame(data)
+                df = pd.DataFrame(datass)
                 
                 series=df['trade_price'].iloc[::-1]
                 
@@ -2192,8 +2192,8 @@ def start_buytrade(buy_amt):
                 print('stoch_rsi_K: ', stochrsi_K.iloc[-1]*100,' percent')
                 print('stoch_rsi_D: ', stochrsi_D.iloc[-1]*100,' percent')
                 print(Decimal(str(stochrsi_K.iloc[-1]*100)))
-                if ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 33) and (Decimal(str(stochrsi_D.iloc[-1]*100)) <25) 
-                and (Decimal(str(rsi[0]['RSI']))< 40) and (Decimal(str(mfi[0]['MFI'])) < 30)):
+                if ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 33) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 27) 
+                and (Decimal(str(rsi[0]['RSI'])) < 40) and (Decimal(str(mfi[0]['MFI'])) < 30)):
                 # if rsi_val:
                     logging.info('매수대상 발견....[' + str(target_item['market']) + ']')
                     # logging.info('RSI : ' + str(rsi))
