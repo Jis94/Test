@@ -27,8 +27,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5==='
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM==='
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2158,7 +2158,7 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         logging.info('- 현재가:' + str(ticker['trade_price']))
                         logging.info('- 수익률:' + str(rev_pcnt))
  
-                        if Decimal(str(rev_pcnt)) < Decimal(-3):
+                        if Decimal(str(rev_pcnt)) < Decimal(-2):
                             logging.info('------------------------------------------------------')
                             logging.info('손-절')
                             logging.info('시장가 매도 시작! [' + str(target_item['market']) + ']')
@@ -2260,9 +2260,11 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         # logging.info(Decimal(str(price[1]['high_price']))) # 전날 고가
                         # logging.info(Decimal(str(price[0]['high_price']))) # 오늘 고가
                         if (((Decimal(str(stochrsi_K.iloc[-1]*100)) < 65) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 70) and (Decimal(str(rsi[0]['RSI'])) > 50))
-                        or (Decimal(str(stochrsi_K.iloc[-1]*100)) < 50) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 50)
+                        or ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 75) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 75))
+                        or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 50) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 50))
                         or (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt)))
-                        or (Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*1.2)):
+                        or (Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*Decimal(1.2))
+                        or (Decimal(str(rev_pcnt)) > Decimal(3))):
                         # or (Decimal(str(rsi[1]['RSI'])) > 70 and Decimal(str(rsi[0]['RSI'])) < 70)):
                             # if (Decimal(str(ticker['trade_price'])) > ((Decimal(str(bb_data[1]['BBH'])))) 
                             # and Decimal(str(price[0]['high_price'])) > (Decimal(str(bb_data[0]['BBH'])))):
@@ -2315,7 +2317,7 @@ if __name__ == '__main__':
         # sell_pcnt = input("매도 수익률(ex:2%=2) : ")
         # dcnt_pcnt = input("고점대비 하락률(ex:-1%=-1) : ")
         log_level = str('i')
-        sell_pcnt = 3
+        sell_pcnt = 2
         dcnt_pcnt = -1
 
  
