@@ -23,8 +23,8 @@ from decimal import Decimal
 from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5='
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM='
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -191,6 +191,7 @@ def get_items(market, except_item):
                         rtn_list.remove(rtnlist_for)
  
         return rtn_list
+ 
  
     # ----------------------------------------
     # Exception Raise
@@ -2046,7 +2047,7 @@ def send_msg(sent_list, key, contents, msg_intval):
 # - Input
 # 1) buy_amt : 매수금액
 # -----------------------------------------------------------------------------
-def start_buytrade(buy_amt):
+def start_buytrade(buy_amt, except_items):
     try:
  
         # ----------------------------------------------------------------------
@@ -2057,12 +2058,13 @@ def start_buytrade(buy_amt):
             logging.info("*********************************************************")
             logging.info("1. 로그레벨 : " + str(log_level))
             logging.info("2. 매수금액 : " + str(buy_amt))
+            logging.info("3. 제외종목 : " + str(except_items))
             logging.info("*********************************************************")
  
             # -----------------------------------------------------------------
             # 전체 종목 리스트 추출
             # -----------------------------------------------------------------
-            target_items = get_items('KRW', '')
+            target_items = get_items('KRW', except_items)
  
             # -----------------------------------------------------------------
             # 종목별 체크
@@ -2080,7 +2082,8 @@ def start_buytrade(buy_amt):
                 # 1. 조회 기준 : 일캔들, 최근 5개 지표 조회
                 # 2. 속도를 위해 원하는 지표만 조회(RSI, MFI, MACD, CANDLE)
                 # -------------------------------------------------------------
-                indicators = get_indicator_sel(target_item['market'], '30', 200, 5, ['RSI', 'MFI', 'MACD', 'CANDLE'])
+                
+                indicators = get_indicator_sel(target_item['market'], '30', 200, 14, ['RSI', 'MFI', 'MACD', 'CANDLE'])
  
                 # --------------------------------------------------------------
                 # 최근 상장하여 캔들 갯수 부족으로 보조 지표를 구하기 어려운 건은 제외
@@ -2088,6 +2091,7 @@ def start_buytrade(buy_amt):
                 if 'CANDLE' not in indicators or len(indicators['CANDLE']) < 200:
                     logging.info('캔들 데이터 부족으로 데이터 산출 불가...[' + str(target_item['market']) + ']')
                     continue
+                # if 'CANDLE not in indicators or l'
  
                 # --------------------------------------------------------------
                 # 보조 지표 추출
@@ -2191,9 +2195,9 @@ def start_buytrade(buy_amt):
                 # logging.info('STO_D :' + stochrsi_D.iloc[-1]*100)
                 print('stoch_rsi_K: ', stochrsi_K.iloc[-1]*100,' percent')
                 print('stoch_rsi_D: ', stochrsi_D.iloc[-1]*100,' percent')
-                print(Decimal(str(stochrsi_K.iloc[-1]*100)))
-                if ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 33) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 27) 
-                and (Decimal(str(rsi[0]['RSI'])) < 40) and (Decimal(str(mfi[0]['MFI'])) < 30)):
+                # print(Decimal(str(stochrsi_K.iloc[-1]*100)))
+                if ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 32) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 28) 
+                and (Decimal(str(rsi[0]['RSI'])) < 40) and (Decimal(str(mfi[0]['MFI'])) < 40) and (Decimal(str(macd[0]['MACD']))) < 0):
                 # if rsi_val:
                     logging.info('매수대상 발견....[' + str(target_item['market']) + ']')
                     # logging.info('RSI : ' + str(rsi))
@@ -2376,17 +2380,20 @@ if __name__ == '__main__':
         # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
         # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
         log_level = str('D')
-        buy_amt = 10000
+        buy_amt = 20000
+        except_items = str('MED')
+        
  
         set_loglevel(log_level)
  
         logging.info("*********************************************************")
         logging.info("1. 로그레벨 : " + str(log_level))
         logging.info("2. 매수금액 : " + str(buy_amt))
+        logging.info("3. 제외종목 : " + str(except_items))        
         logging.info("*********************************************************")
  
         # 매수 로직 시작
-        start_buytrade(buy_amt)
+        start_buytrade(buy_amt, except_items)
  
     except KeyboardInterrupt:
         logging.error("KeyboardInterrupt Exception 발생!")
