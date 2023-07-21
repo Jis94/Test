@@ -11,24 +11,18 @@ import webbrowser
 from decimal import Decimal
 from datetime import datetime
  
-import time
-import logging
 import requests
 import jwt
 import uuid
 import hashlib
 import math
 import os
-import pandas as pd
-import numpy
  
 from urllib.parse import urlencode
-from decimal import Decimal
-from datetime import datetime
  
 # Keys
-access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5-'
-secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM-'
+access_key = 'DBLD9TMX7xSSRujdJjxowZrbM8sAkbjUM01q5='
+secret_key = 'zmv846BJKDR4mvWHb72QOLyJ1AbjqUjU0IEzM='
 server_url = 'https://api.upbit.com'
 line_target_url = 'https://notify-api.line.me/api/notify'
 line_token = '라인 메신저에서 발급받은 Token'
@@ -2168,6 +2162,18 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                             logging.info('------------------------------------------------------')
                             continue
 
+                        if Decimal(str(rev_pcnt)) > Decimal(3):
+                            rtn_sellcoin_mp = sellcoin_mp(target_item['market'], 'Y')
+                            continue
+
+                        if (((Decimal(str(stochrsi_K.iloc[-1]*100)) < 65) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 70) and (Decimal(str(rsi[0]['RSI'])) > 50))
+                        or ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 95) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 95))):
+                        # or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 50) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 50))):
+                        # or (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt)))
+                        # or (Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*Decimal(1.2))):
+                        # or (Decimal(str(rev_pcnt)) > Decimal(3))):                        # or (Decimal(str(rsi[1]['RSI'])) > 70 and Decimal(str(rsi[0]['RSI'])) < 70)):
+                            rtn_sellcoin_mp = sellcoin_mp(target_item['market'], 'Y')
+                            continue
                         # -----------------------------------------------------
                         # 현재 수익률이 매도 수익률 이상인 경우에만 진행
                         # -----------------------------------------------------
@@ -2259,28 +2265,27 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                         # for target_price in price:
                         # logging.info(Decimal(str(price[1]['high_price']))) # 전날 고가
                         # logging.info(Decimal(str(price[0]['high_price']))) # 오늘 고가
-                        if (((Decimal(str(stochrsi_K.iloc[-1]*100)) < 65) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 70) and (Decimal(str(rsi[0]['RSI'])) > 50))
-                        or ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 75) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 75))
-                        or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 50) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 50))
-                        or (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt)))
-                        or (Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*Decimal(1.2))
-                        or (Decimal(str(rev_pcnt)) > Decimal(3))):
-                        # or (Decimal(str(rsi[1]['RSI'])) > 70 and Decimal(str(rsi[0]['RSI'])) < 70)):
+                        # if (((Decimal(str(stochrsi_K.iloc[-1]*100)) < 65) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 70) and (Decimal(str(rsi[0]['RSI'])) > 50))
+                        # or ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 85) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 85))
+                        # or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 50) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 50))
+                        # or (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt)))
+                        # or (Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*Decimal(1.2))
+                        # or (Decimal(str(rev_pcnt)) > Decimal(3))):                        # or (Decimal(str(rsi[1]['RSI'])) > 70 and Decimal(str(rsi[0]['RSI'])) < 70)):
                             # if (Decimal(str(ticker['trade_price'])) > ((Decimal(str(bb_data[1]['BBH'])))) 
                             # and Decimal(str(price[0]['high_price'])) > (Decimal(str(bb_data[0]['BBH'])))):
 
-                            logging.info('------------------------------------------------------')
-                            logging.info('익-절')   
-                            logging.info('시장가 매도 시작! [' + str(target_item['market']) + ']')
-                            rtn_sellcoin_mp = sellcoin_mp(target_item['market'], 'Y')
-                            logging.info('시장가 매도 종료! [' + str(target_item['market']) + ']')
-                            logging.info(rtn_sellcoin_mp)
-                            logging.info('------------------------------------------------------')
+                        # logging.info('------------------------------------------------------')
+                        # logging.info('익-절')   
+                        # logging.info('시장가 매도 시작! [' + str(target_item['market']) + ']')
+                        # rtn_sellcoin_mp = sellcoin_mp(target_item['market'], 'Y')
+                        # logging.info('시장가 매도 종료! [' + str(target_item['market']) + ']')
+                        # logging.info(rtn_sellcoin_mp)
+                        # logging.info('------------------------------------------------------')
 
 
-                        else:
-                            logging.info('-조건에 맞지 않아 매도하지 않음!')
-                            logging.info('------------------------------------------------------')
+                    else:
+                        # logging.info('-조건에 맞지 않아 매도하지 않음!')
+                        logging.info('------------------------------------------------------')
  
  
     # ---------------------------------------
@@ -2317,7 +2322,7 @@ if __name__ == '__main__':
         # sell_pcnt = input("매도 수익률(ex:2%=2) : ")
         # dcnt_pcnt = input("고점대비 하락률(ex:-1%=-1) : ")
         log_level = str('i')
-        sell_pcnt = 2
+        sell_pcnt = 3
         dcnt_pcnt = -1
 
  
