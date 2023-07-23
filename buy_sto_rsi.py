@@ -2196,8 +2196,11 @@ def start_buytrade(buy_amt, except_items):
                 print('stoch_rsi_K: ', stochrsi_K.iloc[-1]*100,' percent')
                 print('stoch_rsi_D: ', stochrsi_D.iloc[-1]*100,' percent')
                 # print(Decimal(str(stochrsi_K.iloc[-1]*100)))
-                if ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 32) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 28) 
-                and (Decimal(str(rsi[0]['RSI'])) < 40) and (Decimal(str(mfi[0]['MFI'])) < 40) and (Decimal(str(macd[0]['MACD']))) < 0):
+                if (((Decimal(str(stochrsi_K.iloc[-1]*100)) > 32) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 28) 
+                and (Decimal(str(rsi[0]['RSI'])) < 40) and (Decimal(str(mfi[0]['MFI'])) < 40) and (Decimal(str(macd[0]['MACD']))) < 0)
+                or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 10) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 10)
+                and (Decimal(str(rsi[0]['RSI'])) < 20) and (Decimal(str(mfi[0]['MFI'])) < 20) and (Decimal(str(macd[0]['MACD']))) < 0)):
+
                 # if rsi_val:
                     logging.info('매수대상 발견....[' + str(target_item['market']) + ']')
                     # logging.info('RSI : ' + str(rsi))
