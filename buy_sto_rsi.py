@@ -2384,7 +2384,7 @@ if __name__ == '__main__':
         # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
         log_level = str('D')
         buy_amt = 6000
-        except_items = str('MED')
+        except_items = str('DOGE,TRX,SHIB,ALGO,KAVA,GMT,VET,CHZ,CVC,IOST,ELF,IOTA,GRT,XTZ,BTT')
         
  
         set_loglevel(log_level)
