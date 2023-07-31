@@ -2166,8 +2166,8 @@ def start_selltrade(sell_pcnt, dcnt_pcnt):
                             rtn_sellcoin_mp = sellcoin_mp(target_item['market'], 'Y')
                             continue
 
-                        if (((Decimal(str(stochrsi_K.iloc[-1]*100)) < 65) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 70) and (Decimal(str(rsi[0]['RSI'])) > 50))
-                        or ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 95) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 95))):
+                        if (((Decimal(str(stochrsi_K.iloc[-1]*100)) < 74) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 76) and (Decimal(str(rsi[0]['RSI'])) > 40))
+                        or ((Decimal(str(stochrsi_K.iloc[-1]*100)) > 97) and (Decimal(str(stochrsi_D.iloc[-1]*100)) > 97))):
                         # or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 50) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 50))):
                         # or (Decimal(str(cur_dcnt_pcnt)) < Decimal(str(dcnt_pcnt)))
                         # or (Decimal(str(ticker['trade_price'])) > (Decimal(str(bb_data[0]['BBH'])))*Decimal(1.2))):
