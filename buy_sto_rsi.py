@@ -2196,10 +2196,10 @@ def start_buytrade(buy_amt, except_items):
                 print('stoch_rsi_K: ', stochrsi_K.iloc[-1]*100,' percent')
                 print('stoch_rsi_D: ', stochrsi_D.iloc[-1]*100,' percent')
                 # print(Decimal(str(stochrsi_K.iloc[-1]*100)))
-                if (((Decimal(str(stochrsi_K.iloc[-1]*100)) > 32) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 28) 
+                if (((Decimal(str(stochrsi_K.iloc[-1]*100)) > 26) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 24) 
                 and (Decimal(str(rsi[0]['RSI'])) < 40) and (Decimal(str(mfi[0]['MFI'])) < 40) and (Decimal(str(macd[0]['MACD']))) < 0)
-                or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 10) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 10)
-                and (Decimal(str(rsi[0]['RSI'])) < 20) and (Decimal(str(mfi[0]['MFI'])) < 20) and (Decimal(str(macd[0]['MACD']))) < 0)):
+                or ((Decimal(str(stochrsi_K.iloc[-1]*100)) < 5) and (Decimal(str(stochrsi_D.iloc[-1]*100)) < 5)
+                and (Decimal(str(rsi[0]['RSI'])) < 10) and (Decimal(str(mfi[0]['MFI'])) < 20) and (Decimal(str(macd[0]['MACD']))) < 0)):
 
                 # if rsi_val:
                     logging.info('매수대상 발견....[' + str(target_item['market']) + ']')
@@ -2383,7 +2383,7 @@ if __name__ == '__main__':
         # log_level = input("로그레벨(D:DEBUG, E:ERROR, 그 외:INFO) : ").upper()
         # buy_amt = input("매수금액(M:최대, 10000:1만원) : ").upper()
         log_level = str('D')
-        buy_amt = 20000
+        buy_amt = 6000
         except_items = str('MED')
         
  
